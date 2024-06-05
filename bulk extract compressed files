@@ -1,0 +1,24 @@
+#Requires 7zip to be installed
+
+#Generate array of compressed files
+$Files = Get-ChildItem "D:\Downloads\" -Include "*.zip","*.7z","*.rar" -Recurse
+
+#Cycle through each file, extracting it
+ForEach($File in $Files)
+{
+  #Set root path of the extracted files, they will be put in a subfolder named the same as the original file
+  $Path = "D:\Downloads\" + $File.BaseName
+  #Just an output to show progress if there are alot of files
+  Write-Host "Extracting $($File.FullName) to $Path"
+  #Define the arguments to pass to 7zip
+  #-x = extract, -o = destination, -aoa = overwrite everything, -r = recursively extract any files inside, add -p"xxx" if password needed 
+  $Arguments = "x ""$File"" -o""$Path"" -aoa -r"
+  #Call 7zip and wait for it to finish before proceeding
+  $Ex = Start-Process -FilePath "C:\Program Files\7-Zip\7z.exe" -ArgumentList $Arguments -Wait -PassThru
+  #If 7zip exits with a successful code, delete the compressed file
+  If ($Ex.ExitCode -eq 0)
+  {
+    Write-Host "Extraction successful, deleting $($File.FullName)"
+    Remove-Item -Path $File.FullName -Force
+  }
+}
