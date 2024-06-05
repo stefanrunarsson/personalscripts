@@ -1,0 +1,20 @@
+#Move files into their own subfolders based on the file name
+
+#Define source folder
+$Folder = "D:\Downloads\handbrake"
+#Generate list of files, ignoring subfolders if present
+$Files = Get-ChildItem $Folder -Depth 1
+
+#Cycle through the files
+ForEach ($File in $Files)
+{
+  #Get destination folder based on file name
+  $Destination = Join-Path $Folder ($File.BaseName)
+  #Create the folder if it does not exist
+  If(!(Test-Path $Destination))
+  {
+    New-Item -Path $Destination -ItemType Directory -Force | Out-Null
+  }
+  #Move the file
+  $File | Move-Item -Destination $($Destination + "\" + $File.Name) -PassThru -Verbose
+}
