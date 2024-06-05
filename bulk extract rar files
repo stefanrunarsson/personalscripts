@@ -1,0 +1,13 @@
+#Requires 7zip to be installed
+
+#Find all the rar files
+rarFiles = Get-LongChildItem -Path "D:\Downloads" -Recurse | Where-Object {$_.Name -like "*.rar"}
+
+#Cycle through the rar files
+ForEach($rarFile in $rarFiles)
+{
+  #Determine destination folder name based on rar file name
+  [string]$newName = $rarFile.FullName.Replace(".rar", "")
+  #Extract the rar file to the folder, if no password needed remove the -p argument
+  & "C:\Program Files\7-Zip\7z.exe" x $($rarFile.FullName) -p"XXXXXXXXXX" -o"$newName"
+}
