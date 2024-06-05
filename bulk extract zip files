@@ -1,0 +1,16 @@
+#Add the native zip file support
+Add-Type -Assembly System.IO.Compression.FileSystem
+
+#Get all the zip files in the downloads folder
+$zipFiles = Get-LongChildItem -Path "D:\Downloads\" -Recurse | Where-Object {$_.Name -like "*.zip"}
+
+#Cycle through each zip file
+ForEach($zipFile in $zipFiles)
+{
+  #Determine the destination path to match the zip file name
+  [string]$newName = $zipFile.FullName.Replace(".zip", "")
+  #Extract the zip file creating the required destination folder
+  Expand-Archive -LiteralPath $($zipFile.FullName) -DestinationPath $newName
+  #Check the destination folder was created, if so assume it was successful and delete
+  If (Test-Path $newName) {Remove-Item $zipFile.FullName} 
+}
