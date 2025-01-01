@@ -1,7 +1,7 @@
 #Requires 7zip to be installed
 
 #Find all the rar files
-rarFiles = Get-LongChildItem -Path "D:\Downloads" -Recurse | Where-Object {$_.Name -like "*.rar"}
+$rarFiles = Get-LongChildItem -Path "D:\Downloads" -Recurse | Where-Object {$_.Name -like "*.rar"}
 
 #Cycle through the rar files
 ForEach($rarFile in $rarFiles)
